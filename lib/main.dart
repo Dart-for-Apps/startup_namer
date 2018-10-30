@@ -20,6 +20,7 @@ class MyApp extends StatelessWidget {
 class RandomWordsState extends State<RandomWords> {
   final List<WordPair> _suggestions = <WordPair>[]; // 단어 쌍 저장 배열
   final TextStyle _biggerFont = const TextStyle(fontSize: 18.0); // 폰트 사이즈
+  final Set<WordPair> _saved = new Set<WordPair>(); // 즐겨찾기 단어 쌍
 
   // State 클래스에 대한 초기화 이후 호출됨.
   @override
@@ -56,10 +57,15 @@ class RandomWordsState extends State<RandomWords> {
   }
 
   Widget _buildRow(WordPair pair) {
+    final bool alreadySaved = _saved.contains(pair);
     return new ListTile(
       title: new Text(
         pair.asPascalCase,
         style: _biggerFont, 
+      ),
+      trailing: new Icon(
+        alreadySaved? Icons.favorite : Icons.favorite_border,
+        color: alreadySaved? Colors.red : null,
       ),
     );
   }
