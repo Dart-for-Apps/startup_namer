@@ -30,11 +30,55 @@ class RandomWordsState extends State<RandomWords> {
     return new Scaffold(
       appBar: new AppBar(
         title: new Text('Startup Name Generator'),
+        actions: <Widget>[ // AppBar의 title 끝에 표기할 widget
+          new IconButton(
+            icon: const Icon(Icons.list),
+            onPressed: _pushSaved
+          )
+        ],
       ),
       body: _buildSuggestions(),
     );
   }
 
+  // favorite View를 navigation stack에 추가.
+  void _pushSaved() {
+    // 앱 navigator에 새로운 Route 추가 
+    Navigator.of(context).push(
+      new MaterialPageRoute<void>(
+        // 새로운 Route는 builder 메소드 호출을 통해 
+        // 새로운 View widget을 렌더링
+        builder: (BuildContext context) {
+          // favorite list에 있는 목록으로 list iterator 생성
+          final Iterable<ListTile> tiles = _saved.map(
+            (WordPair pair) {
+              return new ListTile(
+                title: new Text(
+                  pair.asPascalCase,
+                  style: _biggerFont,
+                )
+              );
+            }
+          );
+          // horizontal bar가 추가된 list 생성 
+          final List<Widget> divided = ListTile
+            .divideTiles( // 자동으로 horizontal bar 삽입
+              context: context,
+              tiles: tiles,
+            )
+            .toList();
+          return new Scaffold(
+            appBar: new AppBar(
+              title: const Text('즐겨찾기'),
+            ),
+            body: new ListView(children: divided),
+          ); 
+        }
+      )
+    );
+  }
+
+  // Scrollabel ListView 를 생성
   Widget _buildSuggestions() {
     // lazy 생성을 사용하는 ListView
     return new ListView.builder(
@@ -70,6 +114,7 @@ class RandomWordsState extends State<RandomWords> {
       ),
       onTap: () {
         setState(() { // setState()를 사용하면, build가 호출된다.
+          // 저장된 것을 클릭하며 set에서 제거, 아니면 set에 추가
           if (alreadySaved) {
             _saved.remove(pair);
           } else {
