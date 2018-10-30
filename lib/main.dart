@@ -57,6 +57,7 @@ class RandomWordsState extends State<RandomWords> {
   }
 
   Widget _buildRow(WordPair pair) {
+    // 즐겨찾기에 추가됐는지 판별하는 변수
     final bool alreadySaved = _saved.contains(pair);
     return new ListTile(
       title: new Text(
@@ -67,6 +68,15 @@ class RandomWordsState extends State<RandomWords> {
         alreadySaved? Icons.favorite : Icons.favorite_border,
         color: alreadySaved? Colors.red : null,
       ),
+      onTap: () {
+        setState(() { // setState()를 사용하면, build가 호출된다.
+          if (alreadySaved) {
+            _saved.remove(pair);
+          } else {
+            _saved.add(pair);
+          }
+        });
+      }
     );
   }
 }
