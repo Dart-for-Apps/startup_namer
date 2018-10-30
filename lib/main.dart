@@ -11,6 +11,9 @@ class MyApp extends StatelessWidget {
     // 앱 전체에 대한 title 만 지정
     return new MaterialApp(
       title: 'Startup Name Generator',
+      theme: new ThemeData(
+        primaryColor: Colors.white, // white 테마로 변경
+      ),
       home: new RandomWords(),
     );
   }
